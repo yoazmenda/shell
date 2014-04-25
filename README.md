@@ -1,4 +1,4 @@
 shell
 =====
 
-a simple linux shell implementation
+a simple linux shell implementation written in c.
