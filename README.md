@@ -2,14 +2,14 @@
 
 <h3>Linux shell written in c.</h3>
 
-features:
+<u>features:</u>
   
   - log history
   - supports multi threaded processes
   - all linux commands
   - environment variables (in the future)
 
-usage:
+<u>usage:</u>
 
 1. download code
 2. run "make"
@@ -17,7 +17,8 @@ usage:
 
 that's it.
 
-useful commands:
+<u>useful commands:</u>
+
   - quit - exit the shell
   - log - see recently used commands
   - add '&' to the end of a non-blocking command to prevent waiting
