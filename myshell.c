@@ -2,10 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <sys/wait.h>
 #include "LineParser.h"
 
 void execute(cmdLine *pCmdLine){
-  int ret, pid;
+  int ret, pid, c_status;
   pid = fork();
   if (pid==-1){
    perror("fork"); 
@@ -17,7 +18,8 @@ void execute(cmdLine *pCmdLine){
      _exit(0);
    }
   }
-      wait(pid);
+      /*wait(&c_status);*/ /*is equivalent to:*/
+      waitpid(-1,&c_status,0);
    }
  
 int main(int argc, char *argv[]){
