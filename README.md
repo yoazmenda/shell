@@ -1,6 +1,6 @@
 <h1>Shell</h1>
 
-<h3>linux shell written in c.</h3>
+<h3>Linux shell written in c.</h3>
 
 features:
   
