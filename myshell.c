@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
  char command[MAX_CMD_SIZE];
  cmdLine *current_command; 
  
- printf("Welcome to MyShell - A simple linux shell emulator.\n");
+ printf("Welcome to Shell.\n");
    do{
    getcwd(path,PATH_MAX);
    printf("%s$ ",path);
