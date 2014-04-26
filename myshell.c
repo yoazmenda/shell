@@ -14,14 +14,11 @@ void execute(cmdLine *pCmdLine){
     ret = execvp(pCmdLine->arguments[0],pCmdLine->arguments);
     if (ret==-1){
      perror("failed to execute command"); 
-     _exit(1);
-    }
-    _exit(0);
+     _exit(0);
+   }
   }
-  
-    wait(pid);
-  
- }
+      wait(pid);
+   }
  
 int main(int argc, char *argv[]){
  char path[PATH_MAX];
@@ -35,14 +32,13 @@ int main(int argc, char *argv[]){
    fgets(command, MAX_CMD_SIZE , stdin);
    current_command = parseCmdLines(command);
    if (strcmp(current_command->arguments[0],"quit")==0){
-     printf("bye bye...\n");  
+     printf("bye bye...\n");
+     freeCmdLines(current_command);
      break;
    }
    execute(current_command);
+   freeCmdLines(current_command);
    }while(1);
-
- 
- 
- 
- return 0;
+   
+return 0;
 }

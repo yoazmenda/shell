@@ -107,7 +107,6 @@ static cmdLine *parseSingleCmdLine(const char *strLine)
     return pCmdLine;
 }
 
-
 static cmdLine* _parseCmdLines(char *line)
 {
 	char *nextStrCmd;
@@ -161,6 +160,7 @@ cmdLine *parseCmdLines(const char *strLine)
 	FREE(line);
 	return head;
 }
+
 
 void freeCmdLines(cmdLine *pCmdLine)
 {
