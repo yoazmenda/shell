@@ -161,7 +161,6 @@ cmdLine *parseCmdLines(const char *strLine)
 	return head;
 }
 
-
 void freeCmdLines(cmdLine *pCmdLine)
 {
   int i;

@@ -4,9 +4,11 @@
 
 char *getcwd(char *buf, size_t size);
 extern int fork();
-extern int wait();
+extern int waitpid();
 extern int execvp();
 extern int _exit();
+extern int chdir();
+
 
 typedef struct cmdLine
 {
