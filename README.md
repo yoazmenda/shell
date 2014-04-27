@@ -21,4 +21,5 @@ that's it.
 
   - quit - exit the shell
   - log - see recently used commands
+  - !n - use the n'th used command (0 = oldest) 
   - add '&' to the end of a non-blocking command to prevent waiting
