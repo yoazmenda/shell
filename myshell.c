@@ -6,36 +6,43 @@
 #include "LineParser.h"
 #define MAX_LOG_SIZE 10
 
-void add_to_log(char *cmd,int *cLog_address,char *log_history[]){
-  log_history[*cLog_address] = (char*)malloc(strlen(cmd));
-  strcpy(log_history[*cLog_address], cmd);
-  if (*cLog_address == MAX_LOG_SIZE-1){
-    *cLog_address = 0;
-  }
-  else{
-    (*cLog_address)++;
-  }
-}
 
-void print_log(int cLog,char *log_history[]){
-  int i;
+
+void add_to_log(char *cmd, int *log_count, int *log_current, char *log_history[]){
+  log_history[*log_current] = (char*)malloc(strlen(cmd)+1);
+  strcpy(log_history[*log_current], cmd);
+  *log_current = ((*log_current)+1)%MAX_LOG_SIZE;
+  if (*log_count<10){
+   (*log_count)++;
+  }
+  }
+
+void print_log(int log_current,char *log_history[]){
+  int i,exist;
   i = 0;
+  exist = 0;
   do{
-    if (i == 10){
+    if (i == MAX_LOG_SIZE){
      break; 
     }
-    if (log_history[cLog] !=0){
-    printf("%s",log_history[cLog]);
+    if (log_history[log_current] !=0){
+    printf("%i: %s",exist,log_history[log_current]);
+    exist++;
     }
-    cLog++;
-    if (cLog==MAX_LOG_SIZE){
-     cLog = 0; 
-    }
+    log_current = (log_current+1)%MAX_LOG_SIZE;
     i++;
-    
-    
   }while(1);
-    
+}
+
+char *get_n_log(int log_count, int log_current,char *log_history[], int n){
+  int oldest;
+  if (log_count<10){
+   oldest = 0; 
+  }
+  else{
+   oldest = log_current-1;
+  }
+  return log_history[(oldest+n)%MAX_LOG_SIZE];
 }
 
 void execute(cmdLine *pCmdLine){
@@ -63,27 +70,36 @@ int main(int argc, char *argv[]){
  char command[MAX_CMD_SIZE];
  char *log_history[MAX_LOG_SIZE];
  cmdLine *current_command; 
- int ret,cLog,i;
+ int ret,i,num,log_count,log_current;
 
  
  
  /*local variables assignment*/
- cLog = 0;
+ log_current = 0;
+ log_count = 0;
  for (i=0; i<MAX_LOG_SIZE; i++){
      log_history[i]=0; /*initialize in order to know what to free later*/
  }
- 
- 
- printf("Welcome to Shell.\n");
+   printf("Welcome to Shell.\n");
    do{
    getcwd(path,PATH_MAX);
    printf("%s$ ",path);
-   fgets(command, MAX_CMD_SIZE , stdin);
+   fgets(command, MAX_CMD_SIZE , stdin);  
    current_command = parseCmdLines(command);
+
    if (current_command == 0) {
      continue; /*empty input*/
    }
-   add_to_log(command,&cLog,log_history);
+   if (*current_command->arguments[0]=='!'){
+    /*"!" code*/
+    num = atoi(1+(current_command->arguments[0]));
+    if ((num>=MAX_LOG_SIZE)||(num == 0 && (*(1+(current_command->arguments[0]))!='0'))){
+      printf("log: Please enter a number from 0 to %i.\n",MAX_LOG_SIZE-1);
+    }
+    strcpy(command,get_n_log(log_count,log_current,log_history,num));
+    freeCmdLines(current_command);
+    current_command = parseCmdLines(command);
+    }
    if (strcmp(current_command->arguments[0],"quit")==0){
      /*quit code*/
      printf("bye bye...\n");
@@ -92,52 +108,50 @@ int main(int argc, char *argv[]){
    }
    else if (strcmp(current_command->arguments[0],"cd")==0){
     /*cd code*/
+   
     if (current_command->argCount==1){ /*no args were given*/
       printf("cd: please specify a path.\n");
     }
     else{
      ret = chdir(current_command->arguments[1]); 
-     if (ret == -1){
+    if (ret == -1){
        perror(current_command->arguments[1]);
     }
     }
-    freeCmdLines(current_command);
+    
    }
    else if (strcmp(current_command->arguments[0],"assign")==0){
     /*assign code*/
     
-    freeCmdLines(current_command);
+    
    
    }
    else if (strcmp(current_command->arguments[0],"unassign")==0){
     /*unassign code*/
     
-    freeCmdLines(current_command);
+   
     
    }
    else if (strcmp(current_command->arguments[0],"env")==0){
     /*env code*/
-    
-    freeCmdLines(current_command);
-    
+
    }
    else if (strcmp(current_command->arguments[0],"log")==0){
     /*log code*/
-    
-    print_log(cLog,log_history);
-    freeCmdLines(current_command);
-    
+    print_log(log_current,log_history);  
    }
    else{ 
     execute(current_command);
-    freeCmdLines(current_command);
    }
+   
+   freeCmdLines(current_command);
+   add_to_log(command,&log_count,&log_current,log_history);
    }while(1);
     for (i=0; i<MAX_LOG_SIZE; i++){
      if (log_history[i]!=0){
       free(log_history[i]); 
      }
     }
-    
+   
 return 0;
 }

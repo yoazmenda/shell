@@ -166,12 +166,13 @@ void freeCmdLines(cmdLine *pCmdLine)
   int i;
   if (!pCmdLine)
     return;
-
+  
   FREE(pCmdLine->inputRedirect);
   FREE(pCmdLine->outputRedirect);
-  for (i=0; i<pCmdLine->argCount; ++i)
-      FREE(pCmdLine->arguments[i]);
+  
+  for (i=0; i<pCmdLine->argCount; i++)
 
+    FREE(pCmdLine->arguments[i]);
   if (pCmdLine->next)
 	  freeCmdLines(pCmdLine->next);
 
