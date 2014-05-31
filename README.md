@@ -7,8 +7,8 @@
   - log history
   - supports multi threaded processes
   - all linux commands
-  - environment variables (in the future)
-
+  - environment variables
+  - 
 <u>usage:</u>
 
 1. download code
